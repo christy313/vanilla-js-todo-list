@@ -1,16 +1,34 @@
-document.querySelector(".create").addEventListener("click", () => {
-  const todolist = document.querySelector(".input-todo").value;
-  if (!todolist) return;
+// load todos
+const loadTodos = () => {
+  const storedTodos = localStorage.getItem("todos");
+  console.log(storedTodos);
+  if (!storedTodos) return;
+  const todoLists = Array.from(JSON.parse(storedTodos));
+};
+window.onload = loadTodos;
 
-  const addNew = document.createElement("div");
-  addNew.classList.add("todo");
-  addNew.innerHTML = `
-      <input class="check" type="checkbox">
-      <div class="todo-list">${escapeHtml(todolist)}</div>
-      <button class="delete">x</button>
-    `;
+// add todo
+document.querySelector(".add-todo").addEventListener("click", () => {
+  const todo = document.querySelector(".input-todo").value;
+  if (!todo) return;
 
-  document.querySelector(".content").appendChild(addNew);
+  localStorage.setItem(
+    "todos",
+    JSON.stringify([
+      ...JSON.parse(localStorage.getItem("todos") || []),
+      { todo, completed: false },
+    ])
+  );
+
+  const addTodo = document.createElement("div");
+  addTodo.classList.add("todo");
+  addTodo.innerHTML = `
+    <input class="check" type="checkbox">
+    <div class="todo-list">${escapeHtml(todo)}</div>
+    <button class="delete">x</button>
+  `;
+
+  document.querySelector(".content").appendChild(addTodo);
   document.querySelector(".input-todo").value = "";
 });
 
@@ -23,7 +41,7 @@ function escapeHtml(unsafe) {
     .replace(/'/g, "&#039;");
 }
 
-// delete
+// delete todo
 
 document.querySelector(".content").addEventListener("click", (e) => {
   const { target } = e;
