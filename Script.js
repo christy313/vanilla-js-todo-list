@@ -1,22 +1,33 @@
-// load todos
 const loadTodos = () => {
-  const storedTodos = localStorage.getItem("todos");
+  if (!localStorage.getItem("todos")) return;
+  const storedTodos = Array.from(JSON.parse(localStorage.getItem("todos")));
+
+  storedTodos.map((todo) => {
+    let todosContainer = document.querySelector(".content");
+    let todoList = document.createElement("div");
+    todoList.classList.add("todo");
+    todoList.innerHTML = `
+      <input class="check" type="checkbox">
+      <div class="todo-list">${todo.todoContent}</div>
+      <button class="delete">x</button>
+    `;
+    todosContainer.appendChild(todoList);
+  });
   console.log(storedTodos);
-  if (!storedTodos) return;
-  const todoLists = Array.from(JSON.parse(storedTodos));
 };
+
 window.onload = loadTodos;
 
 // add todo
 document.querySelector(".add-todo").addEventListener("click", () => {
-  const todo = document.querySelector(".input-todo").value;
-  if (!todo) return;
+  const todoContent = document.querySelector(".input-todo").value;
+  if (!todoContent) return;
 
   localStorage.setItem(
     "todos",
     JSON.stringify([
-      ...JSON.parse(localStorage.getItem("todos") || []),
-      { todo, completed: false },
+      ...JSON.parse(localStorage.getItem("todos") || "[]"),
+      { todoContent, completed: false },
     ])
   );
 
@@ -24,7 +35,7 @@ document.querySelector(".add-todo").addEventListener("click", () => {
   addTodo.classList.add("todo");
   addTodo.innerHTML = `
     <input class="check" type="checkbox">
-    <div class="todo-list">${escapeHtml(todo)}</div>
+    <div class="todo-list">${escapeHtml(todoContent)}</div>
     <button class="delete">x</button>
   `;
 
@@ -32,14 +43,14 @@ document.querySelector(".add-todo").addEventListener("click", () => {
   document.querySelector(".input-todo").value = "";
 });
 
-function escapeHtml(unsafe) {
-  return unsafe
+const escapeHtml = (todoInput) => {
+  return todoInput
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-}
+};
 
 // delete todo
 
