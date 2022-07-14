@@ -1,3 +1,12 @@
+const escapeHtml = (todoInput) => {
+  return todoInput
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 const loadTodos = () => {
   const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
   if (!localStorage.getItem("todos")) return;
@@ -45,7 +54,14 @@ document.querySelector(".input-todo").addEventListener("keypress", (e) => {
   }
 });
 
-const todoChecked = () => {
+const completeTodo = () => {
+  document.querySelector(".content").addEventListener("click", (e) => {
+    if (e.target.classList.contains("check")) {
+      const checked = e.target.parentNode.classList;
+      e.target.checked ? checked.add("done") : checked.remove("done");
+    }
+  });
+
   const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
   const inputs = document.querySelectorAll("input");
   console.log(inputs);
@@ -65,16 +81,7 @@ const todoChecked = () => {
   };
   setStorage();
 };
-todoChecked();
-
-const escapeHtml = (todoInput) => {
-  return todoInput
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-};
+completeTodo();
 
 // delete todo
 
@@ -85,13 +92,3 @@ document.querySelector(".content").addEventListener("click", (e) => {
     return;
   }
 });
-
-const completeTodo = () => {
-  document.querySelector(".content").addEventListener("click", (e) => {
-    if (e.target.classList.contains("check")) {
-      const checked = e.target.parentNode.classList;
-      e.target.checked ? checked.add("done") : checked.remove("done");
-    }
-  });
-};
-completeTodo();
