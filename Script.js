@@ -1,47 +1,71 @@
 const loadTodos = () => {
+  const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
   if (!localStorage.getItem("todos")) return;
-  const storedTodos = Array.from(JSON.parse(localStorage.getItem("todos")));
-
+  console.log(storedTodos);
   storedTodos.map((todo) => {
     let todosContainer = document.querySelector(".content");
     let todoList = document.createElement("div");
     todoList.classList.add("todo");
     todoList.innerHTML = `
-      <input class="check" type="checkbox">
+      <input class="check" type="checkbox"> 
       <div class="todo-list">${todo.todoContent}</div>
       <button class="delete">x</button>
     `;
     todosContainer.appendChild(todoList);
   });
-  console.log(storedTodos);
 };
 
 window.onload = loadTodos;
 
 // add todo
-document.querySelector(".add-todo").addEventListener("click", () => {
+document.querySelector(".input-todo").addEventListener("keypress", (e) => {
   const todoContent = document.querySelector(".input-todo").value;
   if (!todoContent) return;
 
-  localStorage.setItem(
-    "todos",
-    JSON.stringify([
-      ...JSON.parse(localStorage.getItem("todos") || "[]"),
-      { todoContent, completed: false },
-    ])
-  );
+  if (e.key === "Enter") {
+    document.querySelector(".input-todo").click();
+    localStorage.setItem(
+      "todos",
+      JSON.stringify([
+        ...JSON.parse(localStorage.getItem("todos") || "[]"),
+        { todoContent, completed: false },
+      ])
+    );
 
-  const addTodo = document.createElement("div");
-  addTodo.classList.add("todo");
-  addTodo.innerHTML = `
-    <input class="check" type="checkbox">
-    <div class="todo-list">${escapeHtml(todoContent)}</div>
-    <button class="delete">x</button>
-  `;
+    const addTodo = document.createElement("div");
+    addTodo.classList.add("todo");
+    addTodo.innerHTML = `
+        <input class="check" type="checkbox" onClick="todoChecked(checked)">
+        <div class="todo-list">${escapeHtml(todoContent)}</div>
+        <button class="delete">x</button>
+      `;
 
-  document.querySelector(".content").appendChild(addTodo);
-  document.querySelector(".input-todo").value = "";
+    document.querySelector(".content").appendChild(addTodo);
+    document.querySelector(".input-todo").value = "";
+  }
 });
+
+const todoChecked = () => {
+  const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+  const inputs = document.querySelectorAll("input");
+  console.log(inputs);
+  inputs.forEach((input) => {
+    const checkedTodos = storedTodos.find((todo) => {
+      todo.todoContent === input.value;
+    });
+    checkedTodos ? (input.checked = true) : (input.checked = false);
+  });
+
+  const setStorage = () => {
+    const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    inputs.forEach((input) => {
+      input.checked ? storedTodos.push({ name: input.value }) : null;
+    });
+    localStorage.setItem("todos", JSON.stringify(storedTodos));
+  };
+  setStorage();
+};
+todoChecked();
 
 const escapeHtml = (todoInput) => {
   return todoInput
