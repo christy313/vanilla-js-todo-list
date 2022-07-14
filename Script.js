@@ -84,9 +84,14 @@ document.querySelector(".content").addEventListener("click", (e) => {
     target.parentNode.remove();
     return;
   }
-
-  if (target.classList.contains("check")) {
-    const chk = target.parentNode.classList;
-    target.checked ? chk.add("done") : chk.remove("done");
-  }
 });
+
+const completeTodo = () => {
+  document.querySelector(".content").addEventListener("click", (e) => {
+    if (e.target.classList.contains("check")) {
+      const checked = e.target.parentNode.classList;
+      e.target.checked ? checked.add("done") : checked.remove("done");
+    }
+  });
+};
+completeTodo();
