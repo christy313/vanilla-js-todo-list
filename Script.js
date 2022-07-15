@@ -30,8 +30,8 @@ const addTodo = (todo) => {
 
   todoDiv.innerHTML = `
     <input class="todo-check" type="checkbox">
-    <div id=${id} class="todo-content">${escapeHtml(content)}</div>
-    <button class="delete">x</button>
+    <div class="todo-content">${escapeHtml(content)}</div>
+    <button id=${id} class="delete">x</button>
   `;
 
   todosContainer.appendChild(todoDiv);
@@ -41,11 +41,8 @@ const addTodo = (todo) => {
 // delete todo
 todosContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete")) {
-    todos.filter((todo) => {
-      todo.content !== e.target.previousElementSibling.innerHTML;
-    });
+    todos = todos.filter((todo) => todo.id !== e.target.getAttribute("id"));
     localStorage.setItem("todos", JSON.stringify(todos));
-
     e.target.closest("div").remove();
   }
 });
