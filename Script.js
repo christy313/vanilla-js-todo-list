@@ -16,29 +16,31 @@ const loadTodos = () => {
 
 window.onload = loadTodos;
 
-// add todo
-document.querySelector(".todo-input").addEventListener("keypress", (e) => {
-  const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-  const content = document.querySelector(".todo-input").value;
-  if (!content) return;
-  if (e.key === "Enter") {
-    localStorage.setItem(
-      "todos",
-      JSON.stringify([
-        ...storedTodos,
-        { id: `${new Date().getTime()}`, content, completed: false },
-      ])
-    );
-    const addTodo = document.createElement("div");
-    addTodo.classList.add("todo");
-    addTodo.innerHTML = `
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+const addTodo = (todo) => {
+  const todoDiv = document.createElement("div");
+  todoDiv.classList.add("todo");
+  const { id, content } = todo;
+  todoDiv.innerHTML = `
         <input class="todo-check" type="checkbox">
-        <div class="todo-content">${escapeHtml(content)}</div>
+        <div id=${id} class="todo-content">${escapeHtml(content)}</div>
         <button class="delete">x</button>
       `;
+  document.querySelector(".todos").appendChild(todoDiv);
+  document.querySelector(".todo-input").value = "";
+};
 
-    document.querySelector(".todos").appendChild(addTodo);
-    document.querySelector(".todo-input").value = "";
+// listen to keypress down and add todo
+document.querySelector(".todo-input").addEventListener("keypress", (e) => {
+  const content = document.querySelector(".todo-input").value;
+  if (!content) return;
+
+  if (e.key === "Enter") {
+    const todo = { id: `${new Date().getTime()}`, content, completed: false };
+    todos.push(todo);
+    localStorage.setItem("todos", JSON.stringify(todos));
+    addTodo(todo);
   }
 });
 
