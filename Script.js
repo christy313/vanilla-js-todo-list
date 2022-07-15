@@ -28,6 +28,7 @@ const addTodo = (todo) => {
   const todoDiv = document.createElement("div");
   todoDiv.classList.add("todo");
   todoDiv.setAttribute("id", id);
+
   todoDiv.innerHTML = `
     <input class="todo-check" type="checkbox">
     <div class="todo-content">${escapeHtml(content)}</div>
@@ -37,6 +38,10 @@ const addTodo = (todo) => {
   todosContainer.appendChild(todoDiv);
   todoInput.value = "";
 };
+
+if (localStorage.getItem("todos")) {
+  todos.map((todo) => addTodo(todo));
+}
 
 // delete todo
 todosContainer.addEventListener("click", (e) => {
@@ -50,23 +55,21 @@ todosContainer.addEventListener("click", (e) => {
 });
 
 // complete todo
-todosContainer.addEventListener("click", (e) => {
-  if (e.target.classList.contains("todo-check")) {
-    console.log(e.target);
-    localStorage.setItem("todos", JSON.stringify(todos));
-    completeTodo(todo);
+const completeTodo = (todoId) => {
+  todos.map((todo) => {
+    if (todoId === todo.id) {
+      todo.completed = !todo.completed;
+    }
+  });
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
 
+todosContainer.addEventListener("click", (e) => {
+  const todoId = e.target.parentNode.getAttribute("id");
+  completeTodo(todoId);
+
+  if (e.target.classList.contains("todo-check")) {
     const checked = e.target.parentNode.classList;
     e.target.checked ? checked.add("done") : checked.remove("done");
   }
 });
-
-const completeTodo = (todo) => {
-  todos.find((todo) => clicked.id === todo.id);
-  // completed -> true
-};
-
-// if todos exist local storage
-if (localStorage.getItem("todos")) {
-  todos.map((todo) => addTodo(todo));
-}
