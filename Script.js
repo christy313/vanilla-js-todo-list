@@ -39,7 +39,11 @@ const addTodo = (todo) => {
   todoInput.value = "";
 };
 
-if (localStorage.getItem("todos")) {
+// if (localStorage.getItem("todos")) {
+//   todos.map((todo) => addTodo(todo));
+// }
+
+if (todos) {
   todos.map((todo) => addTodo(todo));
 }
 
@@ -55,21 +59,19 @@ todosContainer.addEventListener("click", (e) => {
 });
 
 // complete todo
+todosContainer.addEventListener("click", (e) => {
+  const todoId = e.target.parentNode.getAttribute("id");
+  completeTodo(todoId);
+  const checked = e.target.parentNode.classList;
+  e.target.checked ? checked.add("done") : checked.remove("done");
+});
+
 const completeTodo = (todoId) => {
   todos.map((todo) => {
-    if (todoId === todo.id) {
+    if (todo.id === todoId) {
       todo.completed = !todo.completed;
     }
   });
   localStorage.setItem("todos", JSON.stringify(todos));
 };
-
-todosContainer.addEventListener("click", (e) => {
-  const todoId = e.target.parentNode.getAttribute("id");
-  completeTodo(todoId);
-
-  if (e.target.classList.contains("todo-check")) {
-    const checked = e.target.parentNode.classList;
-    e.target.checked ? checked.add("done") : checked.remove("done");
-  }
-});
+// local storage data didn't async when reloading
