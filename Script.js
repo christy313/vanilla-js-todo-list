@@ -1,21 +1,3 @@
-// const loadTodos = () => {
-//   if (!localStorage.getItem("todos")) return;
-//   let storedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
-//   storedTodos.map((todo) => {
-//     let todosContainer = document.querySelector(".todos");
-//     let todoList = document.createElement("div");
-//     todoList.classList.add("todo");
-//     todoList.innerHTML = `
-//       <input class="todo-check" type="checkbox">
-//       <div class="todo-content">${todo.content}</div>
-//       <button class="delete">x</button>
-//     `;
-//     todosContainer.appendChild(todoList);
-//   });
-// };
-
-// window.onload = loadTodos;
-
 const escapeHtml = (todoInput) => {
   return todoInput
     .replace(/&/g, "&amp;")
@@ -26,6 +8,8 @@ const escapeHtml = (todoInput) => {
 };
 
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
+const todosContainer = document.querySelector(".todos");
+const todoInput = document.querySelector(".todo-input");
 
 const addTodo = (todo) => {
   const todoDiv = document.createElement("div");
@@ -36,13 +20,13 @@ const addTodo = (todo) => {
         <div id=${id} class="todo-content">${escapeHtml(content)}</div>
         <button class="delete">x</button>
       `;
-  document.querySelector(".todos").appendChild(todoDiv);
-  document.querySelector(".todo-input").value = "";
+  todosContainer.appendChild(todoDiv);
+  todoInput.value = "";
 };
 
 // listen to keypress down and add todo
-document.querySelector(".todo-input").addEventListener("keypress", (e) => {
-  const content = document.querySelector(".todo-input").value;
+todoInput.addEventListener("keypress", (e) => {
+  const content = todoInput.value;
 
   if (content.trim() && e.key === "Enter") {
     const todo = { id: `${new Date().getTime()}`, content, completed: false };
@@ -58,7 +42,7 @@ if (localStorage.getItem("todos")) {
 }
 
 // complete todo
-document.querySelector(".todos").addEventListener("click", (e) => {
+todosContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("todo-check")) {
     const checked = e.target.parentNode.classList;
     e.target.checked ? checked.add("done") : checked.remove("done");
@@ -67,7 +51,7 @@ document.querySelector(".todos").addEventListener("click", (e) => {
 
 // delete todo
 let storedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
-document.querySelector(".todos").addEventListener("click", (e) => {
+todosContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete")) {
     e.target.closest("div").remove();
   }
