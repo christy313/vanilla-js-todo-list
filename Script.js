@@ -43,9 +43,8 @@ const addTodo = (todo) => {
 // listen to keypress down and add todo
 document.querySelector(".todo-input").addEventListener("keypress", (e) => {
   const content = document.querySelector(".todo-input").value;
-  if (!content) return;
 
-  if (e.key === "Enter") {
+  if (content.trim() && e.key === "Enter") {
     const todo = { id: `${new Date().getTime()}`, content, completed: false };
     todos.push(todo);
     localStorage.setItem("todos", JSON.stringify(todos));
