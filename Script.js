@@ -74,4 +74,3 @@ const completeTodo = (todoId) => {
   });
   localStorage.setItem("todos", JSON.stringify(todos));
 };
-// local storage data didn't async when reloading
