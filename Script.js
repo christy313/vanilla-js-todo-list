@@ -1,20 +1,29 @@
-const loadTodos = () => {
-  if (!localStorage.getItem("todos")) return;
-  let storedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
-  storedTodos.map((todo) => {
-    let todosContainer = document.querySelector(".todos");
-    let todoList = document.createElement("div");
-    todoList.classList.add("todo");
-    todoList.innerHTML = `
-      <input class="todo-check" type="checkbox">
-      <div class="todo-content">${todo.content}</div>
-      <button class="delete">x</button>
-    `;
-    todosContainer.appendChild(todoList);
-  });
-};
+// const loadTodos = () => {
+//   if (!localStorage.getItem("todos")) return;
+//   let storedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
+//   storedTodos.map((todo) => {
+//     let todosContainer = document.querySelector(".todos");
+//     let todoList = document.createElement("div");
+//     todoList.classList.add("todo");
+//     todoList.innerHTML = `
+//       <input class="todo-check" type="checkbox">
+//       <div class="todo-content">${todo.content}</div>
+//       <button class="delete">x</button>
+//     `;
+//     todosContainer.appendChild(todoList);
+//   });
+// };
 
-window.onload = loadTodos;
+// window.onload = loadTodos;
+
+const escapeHtml = (todoInput) => {
+  return todoInput
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
 
 let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
@@ -44,6 +53,11 @@ document.querySelector(".todo-input").addEventListener("keypress", (e) => {
   }
 });
 
+// reload todos
+if (localStorage.getItem("todos")) {
+  todos.map((todo) => addTodo(todo));
+}
+
 // complete todo
 document.querySelector(".todos").addEventListener("click", (e) => {
   if (e.target.classList.contains("todo-check")) {
@@ -63,12 +77,3 @@ document.querySelector(".todos").addEventListener("click", (e) => {
   });
   localStorage.setItem("todos", JSON.stringify(storedTodos));
 });
-
-const escapeHtml = (todoInput) => {
-  return todoInput
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-};
