@@ -1,5 +1,5 @@
-const escapeHtml = (todoInput) => {
-  return todoInput
+const escapeHtml = (input) => {
+  return input
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -11,20 +11,7 @@ let todos = JSON.parse(localStorage.getItem("todos")) || [];
 const todosContainer = document.querySelector(".todos");
 const todoInput = document.querySelector(".todo-input");
 
-const addTodo = (todo) => {
-  const todoDiv = document.createElement("div");
-  todoDiv.classList.add("todo");
-  const { id, content } = todo;
-  todoDiv.innerHTML = `
-        <input class="todo-check" type="checkbox">
-        <div id=${id} class="todo-content">${escapeHtml(content)}</div>
-        <button class="delete">x</button>
-      `;
-  todosContainer.appendChild(todoDiv);
-  todoInput.value = "";
-};
-
-// listen to keypress down and add todo
+// add todo
 todoInput.addEventListener("keypress", (e) => {
   const content = todoInput.value;
 
@@ -36,10 +23,32 @@ todoInput.addEventListener("keypress", (e) => {
   }
 });
 
-// reload todos
-if (localStorage.getItem("todos")) {
-  todos.map((todo) => addTodo(todo));
-}
+const addTodo = (todo) => {
+  const { id, content } = todo;
+  const todoDiv = document.createElement("div");
+  todoDiv.classList.add("todo");
+
+  todoDiv.innerHTML = `
+    <input class="todo-check" type="checkbox">
+    <div id=${id} class="todo-content">${escapeHtml(content)}</div>
+    <button class="delete">x</button>
+  `;
+
+  todosContainer.appendChild(todoDiv);
+  todoInput.value = "";
+};
+
+// delete todo
+todosContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("delete")) {
+    todos.filter((todo) => {
+      todo.content !== e.target.previousElementSibling.innerHTML;
+    });
+    localStorage.setItem("todos", JSON.stringify(todos));
+
+    e.target.closest("div").remove();
+  }
+});
 
 // complete todo
 todosContainer.addEventListener("click", (e) => {
@@ -49,14 +58,7 @@ todosContainer.addEventListener("click", (e) => {
   }
 });
 
-// delete todo
-let storedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
-todosContainer.addEventListener("click", (e) => {
-  if (e.target.classList.contains("delete")) {
-    e.target.closest("div").remove();
-  }
-  storedTodos.filter((todo) => {
-    todo.content !== e.target.previousElementSibling.innerHTML;
-  });
-  localStorage.setItem("todos", JSON.stringify(storedTodos));
-});
+// if todos exist local storage
+if (localStorage.getItem("todos")) {
+  todos.map((todo) => addTodo(todo));
+}
