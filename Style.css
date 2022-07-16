@@ -60,7 +60,3 @@ h1{
 	border-radius: 50%;
 	color: #76b5c5;
 }
-
-.todo.done .todo-content {
-	text-decoration: line-through;
-}

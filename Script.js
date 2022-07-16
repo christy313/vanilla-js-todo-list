@@ -30,7 +30,9 @@ const addTodo = (todo) => {
   todoDiv.setAttribute("id", id);
 
   todoDiv.innerHTML = `
-    <input class="todo-check" type="checkbox">
+    <input class="todo-check" type="checkbox" ${
+      todo.completed ? "checked" : ""
+    }>
     <div class="todo-content">${escapeHtml(content)}</div>
     <button class="delete">x</button>
   `;
@@ -38,10 +40,6 @@ const addTodo = (todo) => {
   todosContainer.appendChild(todoDiv);
   todoInput.value = "";
 };
-
-// if (localStorage.getItem("todos")) {
-//   todos.map((todo) => addTodo(todo));
-// }
 
 if (todos) {
   todos.map((todo) => addTodo(todo));
@@ -60,17 +58,16 @@ todosContainer.addEventListener("click", (e) => {
 
 // complete todo
 todosContainer.addEventListener("click", (e) => {
-  const todoId = e.target.parentNode.getAttribute("id");
-  completeTodo(todoId);
-  const checked = e.target.parentNode.classList;
-  e.target.checked ? checked.add("done") : checked.remove("done");
+  const element = e.target;
+  const todoId = element.parentNode.getAttribute("id");
+  completeTodo(todoId, element);
 });
 
-const completeTodo = (todoId) => {
-  todos.map((todo) => {
-    if (todo.id === todoId) {
-      todo.completed = !todo.completed;
-    }
-  });
+const completeTodo = (todoId, element) => {
+  const todo = todos.find((todo) => todo.id === todoId);
+  const checked = element.parentNode.classList;
+  if (element.classList.contains("todo-check")) {
+    todo.completed = !todo.completed;
+  }
   localStorage.setItem("todos", JSON.stringify(todos));
 };
