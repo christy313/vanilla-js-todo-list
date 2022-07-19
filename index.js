@@ -1,5 +1,5 @@
-const escapeHtml = (input) => {
-  return input
+const escapeHtml = (text) => {
+  return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -7,7 +7,11 @@ const escapeHtml = (input) => {
     .replace(/'/g, "&#039;");
 };
 
-let todos = JSON.parse(localStorage.getItem("todos")) || [];
+const createId = () => {
+  return new Date().getTime();
+};
+
+let taskItems = JSON.parse(localStorage.getItem("taskItems")) || [];
 const todosContainer = document.querySelector(".todos");
 const todoInput = document.querySelector(".todo-input");
 
@@ -16,14 +20,14 @@ todoInput.addEventListener("keypress", (e) => {
   const content = todoInput.value;
 
   if (content.trim() && e.key === "Enter") {
-    const todo = { id: `${new Date().getTime()}`, content, completed: false };
-    todos.push(todo);
-    localStorage.setItem("todos", JSON.stringify(todos));
-    addTodo(todo);
+    const todo = { id: `${createId()}`, content, completed: false };
+    taskItems.push(todo);
+    localStorage.setItem("taskItems", JSON.stringify(taskItems));
+    createTaskInnerHTML(todo);
   }
 });
 
-const addTodo = (todo) => {
+const createTaskInnerHTML = (todo) => {
   const { id, content } = todo;
   const todoDiv = document.createElement("div");
   todoDiv.classList.add("todo");
@@ -41,17 +45,17 @@ const addTodo = (todo) => {
   todoInput.value = "";
 };
 
-if (todos) {
-  todos.map((todo) => addTodo(todo));
+if (taskItems) {
+  taskItems.map((todo) => createTaskInnerHTML(todo));
 }
 
 // delete todo
 todosContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete")) {
-    todos = todos.filter(
+    taskItems = taskItems.filter(
       (todo) => todo.id !== e.target.parentNode.getAttribute("id")
     );
-    localStorage.setItem("todos", JSON.stringify(todos));
+    localStorage.setItem("taskItems", JSON.stringify(taskItems));
     e.target.closest("div").remove();
   }
 });
@@ -64,10 +68,10 @@ todosContainer.addEventListener("click", (e) => {
 });
 
 const completeTodo = (todoId, element) => {
-  const todo = todos.find((todo) => todo.id === todoId);
+  const todo = taskItems.find((todo) => todo.id === todoId);
   const checked = element.parentNode.classList;
   if (element.classList.contains("todo-check")) {
     todo.completed = !todo.completed;
   }
-  localStorage.setItem("todos", JSON.stringify(todos));
+  localStorage.setItem("taskItems", JSON.stringify(taskItems));
 };
