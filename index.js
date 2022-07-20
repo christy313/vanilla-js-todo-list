@@ -12,15 +12,20 @@ const reloadTasks = (taskItems) => {
 };
 reloadTasks(taskItems);
 
+// key  { id: 1658348546857 }
+// value { content: "a", completed: false }
+
 // add task
 taskInput.addEventListener("keypress", (e) => {
   const content = taskInput.value;
 
   if (content.trim() && e.key === "Enter") {
-    const task = { id: `${createId()}`, content, completed: false };
-    taskItems.push(task);
-    localStorage.setItem("taskItems", JSON.stringify(taskItems));
-    const newTaskInnerHTML = createTaskInnerHTML(task);
+    const key = createId();
+    const taskValue = { content, completed: false };
+    const taskContent = [key, taskValue];
+    taskItems.push(taskContent);
+    localStorage.setItem(key, JSON.stringify(taskValue));
+    const newTaskInnerHTML = createTaskInnerHTML(key, taskValue);
     tasksContainer.appendChild(newTaskInnerHTML);
     taskInput.value = "";
   }
