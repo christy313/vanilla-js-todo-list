@@ -4,6 +4,11 @@ let taskItems = JSON.parse(localStorage.getItem("taskItems")) || [];
 const todosContainer = document.querySelector(".todos");
 const todoInput = document.querySelector(".todo-input");
 
+taskItems.forEach((task) => {
+  const newTaskInnerHTML = createTaskInnerHTML(task);
+  todosContainer.appendChild(newTaskInnerHTML);
+});
+
 // add todo
 todoInput.addEventListener("keypress", (e) => {
   const content = todoInput.value;
@@ -12,19 +17,11 @@ todoInput.addEventListener("keypress", (e) => {
     const todo = { id: `${createId()}`, content, completed: false };
     taskItems.push(todo);
     localStorage.setItem("taskItems", JSON.stringify(taskItems));
-
     const newTaskInnerHTML = createTaskInnerHTML(todo);
     todosContainer.appendChild(newTaskInnerHTML);
-    resetTasks();
     todoInput.value = "";
   }
 });
-
-const resetTasks = () => {
-  if (taskItems) {
-    taskItems.map((todo) => createTaskInnerHTML(todo));
-  }
-};
 
 // delete todo
 todosContainer.addEventListener("click", (e) => {
@@ -46,7 +43,6 @@ todosContainer.addEventListener("click", (e) => {
 
 const completeTodo = (todoId, element) => {
   const todo = taskItems.find((todo) => todo.id === todoId);
-  // const checked = element.parentNode.classList;
   if (element.classList.contains("todo-check")) {
     todo.completed = !todo.completed;
   }
