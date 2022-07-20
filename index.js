@@ -4,10 +4,13 @@ let taskItems = JSON.parse(localStorage.getItem("taskItems")) || [];
 const todosContainer = document.querySelector(".todos");
 const todoInput = document.querySelector(".todo-input");
 
-taskItems.forEach((task) => {
-  const newTaskInnerHTML = createTaskInnerHTML(task);
-  todosContainer.appendChild(newTaskInnerHTML);
-});
+const reloadTasks = (taskItems) => {
+  taskItems.forEach((task) => {
+    const newTaskInnerHTML = createTaskInnerHTML(task);
+    todosContainer.appendChild(newTaskInnerHTML);
+  });
+};
+reloadTasks(taskItems);
 
 // add todo
 todoInput.addEventListener("keypress", (e) => {
