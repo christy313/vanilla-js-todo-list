@@ -1,15 +1,4 @@
-const escapeHtml = (text) => {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-};
-
-const createId = () => {
-  return new Date().getTime();
-};
+import { createId, createTaskInnerHTML } from "./helper.js";
 
 let taskItems = JSON.parse(localStorage.getItem("taskItems")) || [];
 const todosContainer = document.querySelector(".todos");
@@ -23,31 +12,19 @@ todoInput.addEventListener("keypress", (e) => {
     const todo = { id: `${createId()}`, content, completed: false };
     taskItems.push(todo);
     localStorage.setItem("taskItems", JSON.stringify(taskItems));
-    createTaskInnerHTML(todo);
+
+    const newTaskInnerHTML = createTaskInnerHTML(todo);
+    todosContainer.appendChild(newTaskInnerHTML);
+    resetTasks();
+    todoInput.value = "";
   }
 });
 
-const createTaskInnerHTML = (todo) => {
-  const { id, content } = todo;
-  const todoDiv = document.createElement("div");
-  todoDiv.classList.add("todo");
-  todoDiv.setAttribute("id", id);
-
-  todoDiv.innerHTML = `
-    <input class="todo-check" type="checkbox" ${
-      todo.completed ? "checked" : ""
-    }>
-    <div class="todo-content">${escapeHtml(content)}</div>
-    <button class="delete">x</button>
-  `;
-
-  todosContainer.appendChild(todoDiv);
-  todoInput.value = "";
+const resetTasks = () => {
+  if (taskItems) {
+    taskItems.map((todo) => createTaskInnerHTML(todo));
+  }
 };
-
-if (taskItems) {
-  taskItems.map((todo) => createTaskInnerHTML(todo));
-}
 
 // delete todo
 todosContainer.addEventListener("click", (e) => {
@@ -69,7 +46,7 @@ todosContainer.addEventListener("click", (e) => {
 
 const completeTodo = (todoId, element) => {
   const todo = taskItems.find((todo) => todo.id === todoId);
-  const checked = element.parentNode.classList;
+  // const checked = element.parentNode.classList;
   if (element.classList.contains("todo-check")) {
     todo.completed = !todo.completed;
   }
