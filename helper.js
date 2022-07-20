@@ -24,3 +24,11 @@ export const createTaskInnerHTML = (todo) => {
   `;
   return todoDiv;
 };
+
+export const completeTodo = (taskId, checkBox, tasks) => {
+  const task = tasks.find((task) => task.id === taskId);
+  if (checkBox.classList.contains("todo-check")) {
+    task.completed = !task.completed;
+  }
+  localStorage.setItem("taskItems", JSON.stringify(tasks));
+};
