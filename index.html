@@ -3,32 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://necolas.github.io/normalize.css/8.0.1/normalize.css"
-    />
-    <link rel="stylesheet" href="./Style.css" />
-    <title>To Do List</title>
+    <link rel="stylesheet" href="./style.css" />
+    <title>Todo List</title>
   </head>
   <body>
     <div class="wrapper">
       <h1>Todo List</h1>
-      <div class="add">
-        <input class="input-todo" type="text" />
-        <button class="create">create</button>
+      <input class="todo-input" placeholder="Press enter to add a todo" type="text" />
+      <div class="todos">
       </div>
-
-      <div class="content">
-        <!-- <div class="todo done"> -->
-        <!-- <input class="check" type="checkbox">
-          <div class="todo-list"></div>
-          <button class="delete">X</button> -->
-        <!-- </div> todo done -->
-      </div>
-      <!-- content -->
     </div>
-    <!-- wrapper -->
-
-    <script src="./Script.js"></script>
+    <script type="module" src="./index.js"></script>
   </body>
 </html>
