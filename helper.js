@@ -11,17 +11,21 @@ const escapeHtml = (text) => {
     .replace(/'/g, "&#039;");
 };
 
-export const createTaskInnerHTML = (key, taskValue) => {
-  const { completed } = taskValue;
+export const createTaskInnerHTML = (taskValue) => {
+  const id = createId();
+  const { content, completed } = taskValue;
+  console.log(taskValue);
+  console.log(id);
   const todoDiv = document.createElement("div");
   todoDiv.classList.add("todo");
-  todoDiv.setAttribute("id", key);
+  todoDiv.setAttribute("id", id);
 
   todoDiv.innerHTML = `
     <input class="todo-check" type="checkbox" ${completed ? "checked" : ""}>
-    <div class="todo-content">${escapeHtml(taskValue.content)}</div>
+    <div class="todo-content">${escapeHtml(content)}</div>
     <button class="delete">x</button>
   `;
+
   return todoDiv;
 };
 
