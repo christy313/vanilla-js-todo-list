@@ -43,5 +43,5 @@ tasksContainer.addEventListener("click", (e) => {
   const checkBox = e.target;
   const taskId = checkBox.parentNode.getAttribute("id");
   checkTodo(taskId, checkBox, savedTaskItems);
-  // checkTodo for checked/unchecked box
+  // checkTodo for checked/unchecked a checkbox
 });
