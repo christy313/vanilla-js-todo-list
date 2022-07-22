@@ -1,27 +1,27 @@
-import { createId, createTaskInnerHTML, completeTodo } from "./helper.js";
+import { createId, createTaskInnerHTML, checkTodo } from "./helper.js";
 
-// let savedTaskItems = JSON.parse(localStorage.getItem("")) || [];
+let savedTaskItems = JSON.parse(localStorage.getItem("savedTaskItems")) || [];
 const tasksContainer = document.querySelector(".todos");
 const taskInput = document.querySelector(".todo-input");
 
-for (const key in localStorage) {
-  if (localStorage.hasOwnProperty(key)) {
-    let tasks = localStorage.getItem(key);
-    console.log(tasks);
-    const newTaskInnerHTML = createTaskInnerHTML(tasks);
+const reloadTasks = (savedTaskItems) => {
+  savedTaskItems.forEach((task) => {
+    const newTaskInnerHTML = createTaskInnerHTML(task);
     tasksContainer.appendChild(newTaskInnerHTML);
-  }
-}
+  });
+};
+reloadTasks(savedTaskItems);
 
 // add task
 taskInput.addEventListener("keypress", (e) => {
   const content = taskInput.value;
 
   if (content.trim() && e.key === "Enter") {
-    const id = createId();
-    const taskValue = { content: content, completed: false };
-    localStorage.setItem(id, JSON.stringify(taskValue));
-    const newTaskInnerHTML = createTaskInnerHTML(taskValue);
+    const task = { id: `${createId()}`, content, completed: false };
+    savedTaskItems.push(task);
+    // it needs to be pushed inside savedTaskItems to save in local storage
+    localStorage.setItem("savedTaskItems", JSON.stringify(savedTaskItems));
+    const newTaskInnerHTML = createTaskInnerHTML(task);
     tasksContainer.appendChild(newTaskInnerHTML);
     taskInput.value = "";
   }
@@ -30,17 +30,18 @@ taskInput.addEventListener("keypress", (e) => {
 // delete task
 tasksContainer.addEventListener("click", (e) => {
   if (e.target.classList.contains("delete")) {
-    taskItems = taskItems.filter(
+    savedTaskItems = savedTaskItems.filter(
       (task) => task.id !== e.target.parentNode.getAttribute("id")
     );
-    localStorage.setItem("taskItems", JSON.stringify(taskItems));
+    localStorage.setItem("savedTaskItems", JSON.stringify(savedTaskItems));
     e.target.closest("div").remove();
   }
 });
 
-// complete task
+// check task
 tasksContainer.addEventListener("click", (e) => {
   const checkBox = e.target;
   const taskId = checkBox.parentNode.getAttribute("id");
-  completeTodo(taskId, checkBox, taskItems);
+  checkTodo(taskId, checkBox, savedTaskItems);
+  // checkTodo for checked/unchecked box
 });

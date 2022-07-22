@@ -11,11 +11,8 @@ const escapeHtml = (text) => {
     .replace(/'/g, "&#039;");
 };
 
-export const createTaskInnerHTML = (taskValue) => {
-  const id = createId();
-  const { content, completed } = taskValue;
-  console.log(taskValue);
-  console.log(id);
+export const createTaskInnerHTML = (todo) => {
+  const { id, content, completed } = todo;
   const todoDiv = document.createElement("div");
   todoDiv.classList.add("todo");
   todoDiv.setAttribute("id", id);
@@ -25,14 +22,13 @@ export const createTaskInnerHTML = (taskValue) => {
     <div class="todo-content">${escapeHtml(content)}</div>
     <button class="delete">x</button>
   `;
-
   return todoDiv;
 };
 
-export const completeTodo = (taskId, checkBox, tasks) => {
+export const checkTodo = (taskId, checkBox, tasks) => {
   const task = tasks.find((task) => task.id === taskId);
   if (checkBox.classList.contains("todo-check")) {
     task.completed = !task.completed;
   }
-  localStorage.setItem("taskItems", JSON.stringify(tasks));
+  localStorage.setItem("savedTaskItems", JSON.stringify(tasks));
 };
